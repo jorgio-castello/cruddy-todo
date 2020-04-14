@@ -8,32 +8,20 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  //Original Code:
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+  counter.getNextUniqueId((err, id)=>{
+    if (err) {
+      console.log(err);
+    } else {
+      fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err, success)=>{
+        if (err) {
+          console.log(err);
+        } else {
+          callback(null, {id, text});
+        }
+      });
+    }
+  });
 
-  //Thoughts:
-  //Thoughts: the information that we do not have access to (aka needs an async func to obtain): id
-  //We invoke the async getUniqueID, and pass a callback func that accepts an error / id (we'll have this if the func is successful)
-  //if there's an error, we should stop the callback chain and log the error to the console
-  // if there isn't an error, we should now attempt to write the file, passing the path, text to write in the file, and a cb (err, success)
-  //Within the cb of writeFile, if there's an error, we should console.log it
-  //If there isn't an error, we should invoke the callback on the id and text
-
-  // counter.getNextUniqueId((err, id) => {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     fs.writeFile(`${exports.dataDir}/${id}.txt`, text, (err, success) => {
-  //       if (err) {
-  //         console.log(err);
-  //       } else {
-  //         callback(null, { id, text });
-  //       }
-  //     });
-  //   }
-  // });
 };
 
 exports.readAll = (callback) => {
