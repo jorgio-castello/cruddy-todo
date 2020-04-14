@@ -21,29 +21,29 @@ exports.create = (text, callback) => {
       });
     }
   });
-
 };
 
 exports.readAll = (callback) => {
-  //Original Code:
-  var data = _.map(items, (text, id) => {
-    return { id, text };
-  });
-  callback(null, data);
 
-  //Thoughts: fs.readdir - https://nodejs.org/api/fs.html#fs_fs_readdir_path_options_callback
-  //We're attempt to do something on each file within the folder,
-  //Step 1: invoke the fs.readdir async function, pass in a callback (err, files)
-  // fs.readdir(exports.dataDir, (err, files) => {
-  //   //Step 2: if there's an error, log the error
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     //Step 3: if there's isn't an error, map over the files and return the id and text, both with value of the id
-  //     let data = _.map(files, file => ({ id: file.slice(0, -4), text: file.slice(0, -4) }));
-  //     callback(null, data);
-  //   }
-  // });
+  fs.readdir(exports.dataDir, (err, files)=>{
+    if (err) {
+      console.log(err);
+    } else {
+      var data = files.map(file => {
+        return (
+          {id: file.slice(0, -4),
+            text: file.slice(0, -4)}
+        );
+      });
+      callback(null, data);
+    }
+  });
+
+  // the files we read are just the list of names, not the actual data
+  // we map over the array of objects
+  // invoke the callback.
+
+
 
 };
 
