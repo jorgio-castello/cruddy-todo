@@ -25,17 +25,27 @@ exports.create = (text, callback) => {
 
 exports.readAll = (callback) => {
 
+  //fs.readdir => want to get the list of files
+  //Declare an empty arr
+  //loop over the files, we invoke the fs.readFile give the file name as path, pass a callback: this will push an object into the array above
+
   fs.readdir(exports.dataDir, (err, files)=>{
     if (err) {
       console.log(err);
     } else {
-      var data = files.map(file => {
-        return (
-          {id: file.slice(0, -4),
-            text: file.slice(0, -4)}
-        );
+      let todos = [];
+      files.forEach(file => {
+        fs.readFile(`${exports.dataDir}/${file}`, 'utf8', (err, data)=> {
+          if (err) {
+            console.log(err);
+          } else {
+            let obj = {id: file.slice(0, -4), text: data};
+            todos.push(obj);
+            console.log(todos);
+          }
+        });
       });
-      callback(null, data);
+      callback(null, todos);
     }
   });
 
