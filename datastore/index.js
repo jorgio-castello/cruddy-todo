@@ -42,9 +42,6 @@ exports.readAll = (callback) => {
   // the files we read are just the list of names, not the actual data
   // we map over the array of objects
   // invoke the callback.
-
-
-
 };
 
 exports.readOne = (id, callback) => {
