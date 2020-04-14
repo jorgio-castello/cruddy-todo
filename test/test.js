@@ -61,13 +61,13 @@ describe('getNextUniqueId', () => {
 
 });
 
-describe('todos', () => {
+xdescribe('todos', () => {
   before(initializeTestFiles);
   beforeEach(initializeTestCounter);
   beforeEach(cleanTestDatastore);
 
   describe('create', () => {
-    xit('should create a new file for each todo', (done) => {
+    it('should create a new file for each todo', (done) => {
       todos.create('todo1', (err, data) => {
         const todoCount = fs.readdirSync(todos.dataDir).length;
         expect(todoCount).to.equal(1);
@@ -78,7 +78,7 @@ describe('todos', () => {
       });
     });
 
-    xit('should use the generated unique id as the filename', (done) => {
+    it('should use the generated unique id as the filename', (done) => {
       fs.writeFileSync(counter.counterFile, '00142');
       todos.create('buy fireworks', (err, todo) => {
         const todoExists = fs.existsSync(path.join(todos.dataDir, '00143.txt'));
@@ -87,7 +87,7 @@ describe('todos', () => {
       });
     });
 
-    xit('should only save todo text contents in file', (done) => {
+    it('should only save todo text contents in file', (done) => {
       const todoText = 'walk the dog';
       todos.create(todoText, (err, todo) => {
         const todoFileContents = fs.readFileSync(path.join(todos.dataDir, `${todo.id}.txt`)).toString();
@@ -96,7 +96,7 @@ describe('todos', () => {
       });
     });
 
-    xit('should pass a todo object to the callback on success', (done) => {
+    it('should pass a todo object to the callback on success', (done) => {
       const todoText = 'refactor callbacks to promises';
       todos.create(todoText, (err, todo) => {
         expect(todo).to.include({ text: todoText });
@@ -107,7 +107,7 @@ describe('todos', () => {
   });
 
   describe('readAll', () => {
-    xit('should return an empty array when there are no todos', (done) => {
+    it('should return an empty array when there are no todos', (done) => {
       todos.readAll((err, todoList) => {
         expect(err).to.be.null;
         expect(todoList.length).to.equal(0);
@@ -116,7 +116,7 @@ describe('todos', () => {
     });
 
     // Refactor this test when completing `readAll`
-    xit('should return an array with all saved todos', (done) => {
+    it('should return an array with all saved todos', (done) => {
       const todo1text = 'todo 1';
       const todo2text = 'todo 2';
       const expectedTodoList = [{ id: '00001', text: '00001' }, { id: '00002', text: '00002' }];
@@ -134,14 +134,14 @@ describe('todos', () => {
   });
 
   describe('readOne', () => {
-    xit('should return an error for non-existant todo', (done) => {
+    it('should return an error for non-existant todo', (done) => {
       todos.readOne('notAnId', (err, todo) => {
         expect(err).to.exist;
         done();
       });
     });
 
-    xit('should find a todo by id', (done) => {
+    it('should find a todo by id', (done) => {
       const todoText = 'buy chocolate';
       todos.create(todoText, (err, createdTodo) => {
         const id = createdTodo.id;

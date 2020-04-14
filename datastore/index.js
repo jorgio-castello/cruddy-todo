@@ -68,7 +68,7 @@ exports.readOne = (id, callback) => {
     callback(null, { id, text });
   }
 
-  // fs.readFile(`${exports.dataDir}/${id}.txt`, (err, file) => {
+  // fs.readFile(`${exports.dataDir}/${id}.txt`, 'utf8', (err, file) => {
   //   if (err) {
   //     callback(new Error(`No item with id: ${id}`));
   //   } else {
@@ -80,7 +80,7 @@ exports.readOne = (id, callback) => {
 exports.update = (id, text, callback) => {
   var item = items[id];
   if (!item) {
-    callback(new Etror(`No item with id: ${id}`));
+    callback(new Error(`No item with id: ${id}`));
   } else {
     items[id] = text;
     callback(null, { id, text });

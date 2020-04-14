@@ -40,21 +40,28 @@ const writeCounter = (count, callback) => {
 
 exports.getNextUniqueId = (callback) => {
   //Step 1: Invoke readCounter, and pass a function as a call back - the cb accepts an err and number (read from the file)
-  readCounter((err, number) => {
-    if (err) { //if there is an error, we should stop the callback chain and log the error to the console
+  //if there is an error, we should stop the callback chain and log the error to the console
+  //Step 2: Invoke writeCounter within the readCounter cb - accepts number + 1, and a callback function
+  //if there's an error updating the number in the cb chain, stop there and console log the error
+  //last step: invoke the callback passed in as a parameter, and pass in err and a padded number
+
+  readCounter((err, number)=>{
+    if (err) {
       console.log(err);
-    } else { //Step 2: Invoke writeCounter within the readCounter cb - accepts number + 1, and a callback function
-      writeCounter(number + 1, (err, number) => {
-        if (err) { //if there's an error updating the number in the cb chain, stop there and console log the error
+    } else {
+      writeCounter(number + 1, (err, number)=>{
+        if (err) {
           console.log(err);
         } else {
-          callback(err, zeroPaddedNumber(number)); //last step: invoke the callback passed in as a parameter, and pass in err and a padded number
+          callback(null, zeroPaddedNumber(number));
         }
       });
     }
   });
+
 };
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
 exports.counterFile = path.join(__dirname, 'counter.txt');
+exports.getNextUniqueId(() => {});
