@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const sprintf = require('sprintf-js').sprintf;
 
-var counter = 0;
+let counter = 0;
 
 // Private helper functions ////////////////////////////////////////////////////
 
@@ -38,36 +38,21 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-//Update the file
-
-
 exports.getNextUniqueId = (callback) => {
-  // counter = counter + 1;
-
-  //run readCounter passing writeCounter as a callback
+  //Step 1: Invoke readCounter, and pass a function as a call back - the cb accepts an err and number (read from the file)
   readCounter((err, number) => {
-    if (err) {
+    if (err) { //if there is an error, we should stop the callback chain and log the error to the console
       console.log(err);
-    } else {
+    } else { //Step 2: Invoke writeCounter within the readCounter cb - accepts number + 1, and a callback function
       writeCounter(number + 1, (err, number) => {
-        if (err) {
+        if (err) { //if there's an error updating the number in the cb chain, stop there and console log the error
           console.log(err);
         } else {
-          callback(null, zeroPaddedNumber(number));
+          callback(err, zeroPaddedNumber(number)); //last step: invoke the callback passed in as a parameter, and pass in err and a padded number
         }
       });
     }
   });
-
-  // if(err) {
-  //   return err;
-  // } else {
-  // readCounter((err, number)=>{
-  //     id = number;
-  //   });
-  // writeCounter(id + 1, (err, counterString) => console.log(counterString));
-  // return zeroPaddedNumber(id);
-  // }
 };
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
