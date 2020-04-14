@@ -32,7 +32,7 @@ exports.readOne = (id, callback) => {
 exports.update = (id, text, callback) => {
   var item = items[id];
   if (!item) {
-    callback(new Error(`No item with id: ${id}`));
+    callback(new Etror(`No item with id: ${id}`));
   } else {
     items[id] = text;
     callback(null, { id, text });

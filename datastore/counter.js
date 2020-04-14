@@ -38,12 +38,37 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+//Update the file
+
+
+exports.getNextUniqueId = (callback) => {
+  // counter = counter + 1;
+
+  //run readCounter passing writeCounter as a callback
+  readCounter((err, number) => {
+    if (err) {
+      console.log(err);
+    } else {
+      writeCounter(number + 1, (err, number) => {
+        if (err) {
+          console.log(err);
+        } else {
+          callback(null, zeroPaddedNumber(number));
+        }
+      });
+    }
+  });
+
+  // if(err) {
+  //   return err;
+  // } else {
+  // readCounter((err, number)=>{
+  //     id = number;
+  //   });
+  // writeCounter(id + 1, (err, counterString) => console.log(counterString));
+  // return zeroPaddedNumber(id);
+  // }
 };
-
-
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
