@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
 const counter = require('./counter');
+const Promise = require('bluebird');
+const readFilePromise = Promise.promisify(fs.readFile);
 
 var items = {};
 
@@ -24,34 +26,21 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-
-  //fs.readdir => want to get the list of files
-  //Declare an empty arr
-  //loop over the files, we invoke the fs.readFile give the file name as path, pass a callback: this will push an object into the array above
-
   fs.readdir(exports.dataDir, (err, files)=>{
     if (err) {
       console.log(err);
     } else {
-      let todos = [];
-      files.forEach(file => {
-        fs.readFile(`${exports.dataDir}/${file}`, 'utf8', (err, data)=> {
-          if (err) {
-            console.log(err);
-          } else {
-            let obj = {id: file.slice(0, -4), text: data};
-            todos.push(obj);
-            console.log(todos);
-          }
+      let todos = files.map(file =>{
+        return readFilePromise(`${exports.dataDir}/${file}`, 'utf8').then(fileData=>{
+          return {
+            id: file.slice(0, -4),
+            text: fileData
+          };
         });
       });
-      callback(null, todos);
+      Promise.all(todos).then(todoItem => callback(null, todoItem));
     }
   });
-
-  // the files we read are just the list of names, not the actual data
-  // we map over the array of objects
-  // invoke the callback.
 };
 
 exports.readOne = (id, callback) => {
